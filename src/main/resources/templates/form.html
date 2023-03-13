@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<!--            para añadir espacio de nombres, thymeleaf y security-->
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+				xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<title>Starter Template for Bootstrap</title>
+
+<!-- Bootstrap core CSS -->
+<link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- CSS propio -->
+<link href="/css/styles.css" rel="stylesheet">
+
+</head>
+
+<body>
+	<!-- Configuración de nuestro nav(ESTO ES DEL FRAMEWORK BOOTSTRAP ) -->
+	<nav class="navbar navbar-inverse navbar-fixed-top">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed"
+					data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+					aria-controls="navbar">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#">Miempresa.com</a>
+			</div>
+			<div id="navbar" class="collapse navbar-collapse">
+				<ul class="nav navbar-nav">
+					<!-- Si toca Inicio lo enviamos a list.html --> 
+					<li><a href="/">Inicio</a></li>
+					 <!-- Si toca Nuevo Empleado, no hacemos nada, puesto que ya estamos en ese html -->
+					<li class="active"><a href="#">Nuevo empleado</a></li>
+				</ul>
+				
+				<!-- Esto es de bootstrap, para que haya un menú desplegable -->
+          		<ul class="nav navbar-nav navbar-right">
+		        	<li class="dropdown">
+		          		<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+		          		   		<span th:text="${#authentication.name}">Menú</span>
+		          		   		<span class="caret"></span>
+		          		</a>
+		          		<ul class="dropdown-menu">          			
+		          			<li>
+								<!-- Si se pincha se llama al form de abajo -->
+		          				<a href="javascript:document.getElementById('logoutForm').submit()">Salir</a>
+		          			</li>          			
+		          		</ul>
+		        	</li>  		
+		        </ul>
+			</div>
+		</div>
+	</nav>
+	
+	<!-- como el formulario de salida no va a tener nada, tan solo una acción(la de salir), lo ponemos así, que aquí se viene cuando
+	se pulsa arriba -->
+	<form th:action="@{/logout}" method="POST" id="logoutForm">
+    </form>
+	
+	<!-- 
+		configuración de nuestro formulario, esto se puede hacer
+		visualmente, desde la página:
+		https://bootsnipp.com/forms
+		(este te genera ya el código html)
+	-->
+	<div class="container">
+
+		<div class="starter-template">
+			<div class="row">
+				<div class="col-md-offset-2 col-md-8"> 
+					<!--   
+						method="post" -> Avisamos de que es post, para que se vaya a las anotaciones @PostMapping
+					 	th:action="${empleadoForm.id != 0} ? @{/empleado/edit/submit} : @{/empleado/new/submit}" -> 
+					 		cuando se pulse el boton 
+					 			si el id es 0 -> le dara esta accion -> se va EmpleadoController.java(nuevoEmpleadoSubmit), o a esa ruta, es lo mismo
+					 			si el id es distinto de 0 -> le dara esta accion -> se va a EmpleadoController.java(editarEmpleadoSubmit), o a esa ruta, es lo mismo
+					 		(esto se hace para diferenciar si nos interesa añadir un empleado(campos del form vacíos) o si nos interesa editar un empleado(campos del form rellenos con esos datos))	 
+					 		(se utiliza el id != 0, pq es lo mismo que si hicieramos dni(String) != null, solo que los long(el id), por defecto viene a 0, NO a null)
+					 	th:object="${empleadoForm}" -> para modificar el objeto que le pasamos esde EmpleadoController.java                             
+					-->
+					<form method="post" enctype="multipart/form-data" action="#" th:action="${empleadoForm.id != 0} ? @{/empleado/edit/submit} : @{/empleado/new/submit}" th:object="${empleadoForm}">
+
+						<h1 th:text="${empleadoForm.id != 0} ? 'Editar empleado' : 'Nuevo empleado'">Nuevo empleado</h1>
+						
+						<div class="form-group" th:classappend="${#fields.hasErrors('id')} ? 'has-error'">
+								<label for="id">ID</label>
+								<input type="text" class="form-control" id="id" placeholder="El id se generará automaticamente" th:field="*{id}" readonly="readonly">
+								<!-- Comprobamos si tenía errores -->
+								<span th:if="${#fields.hasErrors('id')}" th:errors="*{id}" 
+									class="help-block" id="id-error">Errores</span>
+						</div>
+
+						<div class="form-group"  th:classappend="${#fields.hasErrors('nombre')} ? 'has-error'">
+							<label for="nombre">Nombre</label> 
+							<input type="text" class="form-control" id="nombre" placeholder="Nombre" th:field="*{nombre}" />
+							<span th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}" 
+								class="help-block" id="nombre-error">Errores</span>
+								
+						</div>
+						
+						<div class="form-group">
+							<label for="email">Email</label> 
+							<input type="email" class="form-control" id="email"	placeholder="emple@openwebinars.net" th:field="*{email}" />
+						</div>
+						
+						<div class="form-group">
+							<label for="telefono">Teléfono</label> 
+							<input type="tel" class="form-control" id="telefono" placeholder="954000000" th:field="*{telefono}" />
+						</div>
+						
+						<div class="form-group">
+							<label for="puesto">Puesto</label> 
+							<input type="text" class="form-control" id="puesto" placeholder="Puesto" th:field="*{puesto}" />
+						</div>		
+							
+						<div class="form-group">
+							<label for="file">Avatar</label>
+							<!--                        bootstrap ya nos da esto-->
+							<input type="file" class="form-control input-file" id="filebutton" name="file"/>
+
+							
+						</div>
+							
+						<button type="submit" class="btn btn-default">Enviar</button>	
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script src="/webjars/jquery/jquery.min.js"></script>
+	<script src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+</body>
+</html>

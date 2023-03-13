@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+				xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Starter Template for Bootstrap</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- css que hemos hecho nosotros -->
+    <link href="/css/styles.css" rel="stylesheet">
+
+  </head>
+
+  <body>
+	
+	<!-- Configuración de nuestro nav(ESTO ES DEL FRAMEWORK BOOTSTRAP ) -->
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Miempresa.com</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+			<!-- Si toca Inicio no hacemos nada --> 
+            <li class="active"><a href="#">Inicio</a></li>
+            <!-- Si toca este boton, lo mandamos a EmpleadoController.java(nuevoEmpleado), a esa ruta -->
+            <li><a href="/empleado/new">Nuevo empleado</a></li>
+          </ul>
+          
+          <!-- Esto es de bootstrap, para que haya un menú desplegable -->
+          <ul class="nav navbar-nav navbar-right">
+          	<li class="dropdown">
+          		<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+					  	<!-- Así sacamos el nombre con el que esta autentificado y directamente lo pone como texto, en vez del texto "Menú" -->
+          		   		<span th:text="${#authentication.name}">Menú</span>
+          		   		<span class="caret"></span>
+          		</a>
+          		<ul class="dropdown-menu">          			
+          			<li>
+						<!-- Si se pincha se llama al form de abajo -->
+          				<a href="javascript:document.getElementById('logoutForm').submit()">Salir</a>
+          			</li>          			
+          		</ul>
+          	</li>		
+          </ul>
+          
+ 		  <!-- Parte de list.html para buscar -->
+          <form class="navbar-form navbar-right">
+					<input type="text" class="form-control" placeholder="Buscar..."
+						name="q" th:value="${param.q}">
+		  </form>
+          
+        </div>
+      </div>
+    </nav>
+	
+	<!-- como el formulario de salida no va a tener nada, tan solo una acción(la de salir), lo ponemos así -->
+	<form th:action="@{/logout}" method="POST" id="logoutForm">
+    </form>
+	
+    <div class="container">
+
+      <div class="starter-template">
+		<br>
+		<br> 
+        <h1>Listado de empleados de la empresa</h1>
+        <!-- Configuramos el diseño de nuestra tabla -->
+        <table class="table">
+				<thead>
+					<tr>
+						<th>ID</th>
+						<th>Avatar</th>
+						<th>Nombre</th>
+						<th>Email</th>
+						<th>Teléfono</th>
+						<th>Puesto</th>
+						<th>Operaciones</th>
+				</thead>
+				<tbody>
+					<!-- foreach que recorre el list que le pasamos desde EmpleadoController metiendolo en empleado -->
+					<tr th:each="empleado : ${listaEmpleados}">
+						<!-- Asociamos todos los atributos de cada empleado del list, con sus campos correspondientes en la tabla -->
+						<td th:text="${empleado.id}">ID</td>
+						<!-- 
+							url html/ url thymeleaf: @{}
+										@{} -> indica que es un URL  
+										${empleado.imagen} -> la URL tiene que ser o bien el valor de empleado.imagen
+										(o, si es nula) ?:
+										si es nula que se vaya a esa URL y cargue la imagen de esa URL
+										
+						-->
+						<td><img src="" th:src="@{${empleado.imagen} ?: 'https://img.freepik.com/vector-premium/diseno-ilustracion-vector-personaje-avatar-hombre-joven_24877-18550.jpg'}" width="64px" /></td>						<td th:text="${empleado.nombre}">Pepe Pérez</td>
+						<td th:text="${empleado.email}">pepe.perez@openwebinars.net</td>
+						<td th:text="${empleado.telefono}">954000000</td>
+						<td th:text="${empleado.puesto}">Programador</td>
+						<!-- si pulsa Editar, lo mandamos a EmpleadoController.java(editarEmpleado)
+						y además le pasamos el id en esa ruta(ya que lo necesitaremos para editarlo) -->
+						<td><a th:href="@{/empleado/edit/{id}(id=${empleado.id})}">Editar</a></td>
+					</tr>
+				</tbody>
+			</table>
+      </div>
+
+    </div>
+    
+    <script src="/webjars/jquery/jquery.min.js"></script>
+    <script src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+    </body>
+</html>

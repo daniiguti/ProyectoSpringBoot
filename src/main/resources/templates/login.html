@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	<title>Formulario de login</title>
+	
+	<!-- Bootstrap core CSS -->
+	<link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	
+	<!-- Custom css -->
+	<link href="/css/signin.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+	<div class="container">
+		<!--                  form con el th:action apuntando al /login                 -->
+		<form class="form-signin" th:action="@{/login}" method="post">
+			<h2 class="form-signin-heading">Por favor, introduzca sus datos</h2>
+			<label for="username" class="sr-only">Username</label> 
+			<!--                             name="username" tiene que ser asi, sino no reconocerá la autentificación                       -->
+			<input type="text" id="username" name="username" class="form-control" placeholder="Username" required autofocus> 
+			<label for="password" class="sr-only">Password</label>
+			<!--                             name="password" tiene que ser asi, sino no reconocerá la autentificación                       -->
+			<input type="password" name="password" id="password" class="form-control" placeholder="Password" required>
+			<button class="btn btn-lg btn-primary btn-block" type="submit">Sign	in</button>
+		</form>
+
+	</div>
+	
+
+	<!-- Bootstrap core JavaScript
+    ================================================== -->
+	<!-- Placed at the end of the document so the pages load faster -->
+	<script src="/webjars/jquery/jquery.min.js"></script>
+	<script src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+
+</body>
+</html>
